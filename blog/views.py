@@ -1,22 +1,13 @@
 from django.http import HttpResponse
-from django.shortcuts import render
-from django.views import View
 
+def greeting_view(message):
+    def view_fn(request):
+        return HttpResponse(message)
+    return view_fn
 
-class GreetingView(View):
-    message = 'Good Day'
+greeting = greeting_view('Good Day')
 
-    def get(self, *args, **kwargs):
-        return HttpResponse(self.message)
+morning_greeting = greeting_view('Morning to ya')
 
-greeting = GreetingView.as_view()
-
-
-class MorningGreetingView(GreetingView):
-    message = 'Morning to ya'
-
-morning_greeting = MorningGreetingView.as_view()
-
-
-evening_greeting = GreetingView.as_view(message='Evening to ya')
+evening_greeting = greeting_view('Evening to ya')
 
