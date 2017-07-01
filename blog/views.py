@@ -1,8 +1,26 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.views import View
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.generic import ListView
+from django.utils import timezone
 from .models import Post
 from .forms import PostForm
+
+
+class PostListView(ListView):
+    model = Post
+
+    def head(self, *args, **kwargs):
+        try:
+            post = self.get_queryset().latest('id')
+        except Post.DoesNotExist:
+            raise Http404
+
+        response = HttpResponse()
+        response['Last-Modified'] = post.updated_at.strftime('%a, %d %b %Y %H:%M:%S GMT')
+        return response
+
+post_list = PostListView.as_view()
 
 
 def greeting_view(message):
