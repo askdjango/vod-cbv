@@ -1,8 +1,10 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404
-from django.views import View
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import ListView
 from django.utils import timezone
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.views.generic import ListView
 from .models import Post
 from .forms import PostForm
 
@@ -36,6 +38,7 @@ evening_greeting = greeting_view('Evening to ya')
 
 
 
+@method_decorator(login_required, name='dispatch')
 class EditFormView(View):
     model = None
     form_class = None
